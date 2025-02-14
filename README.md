@@ -38,4 +38,6 @@ def postprocess(output):
             results.append({"bbox": box.tolist(), "score": float(score), "label": int(label)})
     return results
 ```
+<br>
 
+<img width="181" alt="스크린샷 2025-02-13 오전 11 28 54" src="https://github.com/user-attachments/assets/960004aa-ef30-482b-bfd9-2239457c67fc" />
