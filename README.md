@@ -22,10 +22,11 @@ Prob:
 
 - `batch size` 감소, `image size`를 640으로 제한하여 메모리 최적화
 - `fp16` 옵션을 활성화하여 경량화 및 학습 속도 개선
-- ```python
+```python
 python train.py --img 640 --batch 16 --epochs 100 --data custom.yaml --weights yolov5s.pt
 ```
 
+<br>
 
 모델 기본 형태 `boxes`, `scores`, `labels` -> 클라이언트에 적용 시 후처리하여 JSON 형태로 변환이 필요
 ```python
