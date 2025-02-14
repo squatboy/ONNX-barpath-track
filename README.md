@@ -2,11 +2,11 @@
 
 > Info
 
-Model : `YOLOv5s` to `ONNX`
-Datasets : COCO 데이터셋 대신 바벨을 인식하기 위한 커스텀 데이터셋을 구성 (단일 클래스로 학습진행)
-Performance Evaluation: `val.py`를 통해 `Precision`, `Recall`, `mAP` 등을 평가
-Epochs: 50
-최종 mAP: 85%
+- Model : `YOLOv5s` to `ONNX`
+- Datasets : COCO 데이터셋 대신 바벨을 인식하기 위한 커스텀 데이터셋을 구성 (단일 클래스로 학습진행)
+- Performance Evaluation: `val.py`를 통해 `Precision`, `Recall`, `mAP` 등을 평가
+- Epochs: 20
+- 최종 mAP: 85%
 
 Prob:
 - 데이터셋 라벨링이 필요함
