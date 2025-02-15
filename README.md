@@ -10,6 +10,9 @@
 
 신뢰도 기반 필터링, 비최대 억제(NMS) 적용 -> 대표 검출 선택
 
+<br>
+<br>
+
 Prob:
 - 데이터셋 라벨링이 필요함
 - 학습 데이터 수가 부족하여 과적합 발생 가능성 존재
@@ -28,6 +31,7 @@ Prob:
 python train.py --img 640 --batch 16 --epochs 100 --data custom.yaml --weights yolov5s.pt
 ```
 
+<br>
 <br>
 
 모델 기본 형태 `boxes`, `scores`, `labels` -> 클라이언트에 적용 시 후처리하여 JSON 형태로 변환이 필요
