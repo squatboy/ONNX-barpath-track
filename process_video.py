@@ -68,6 +68,7 @@ def process_video_file(input_video_path: str, output_video_path: str):
     
     trajectory = []  # 이동 궤적 저장 (중심 좌표)
     
+    
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -87,6 +88,8 @@ def process_video_file(input_video_path: str, output_video_path: str):
         class_ids = raw_output[:, 5]
         
         thresh = 0.3
+        
+        # 객체가 감지되지 않는 프레임에서의 처리
         filtered_indices = np.where(confidences > thresh)
         if len(filtered_indices[0]) == 0:
             out.write(frame)
@@ -130,7 +133,7 @@ def process_video_file(input_video_path: str, output_video_path: str):
         
         # 형광초록색 얇은 선(두께 1)으로 이동 궤적 그리기
         for i in range(1, len(trajectory)):
-            cv2.line(frame, trajectory[i - 1], trajectory[i], (0, 255, 0), 2)
+            cv2.line(frame, trajectory[i - 1], trajectory[i], (0, 255, 0), 2) # 객체 lost 이후 다시 감지되면, 그 지점부터 새로운 중심점이 trajectory 배열에 추가
         
         # 현재 프레임에 수직 정확도 표시 (충분한 포인트가 있을 때만)
         if len(trajectory) >= 2:
