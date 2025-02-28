@@ -1,7 +1,7 @@
 import os
 import uuid
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from process_video import process_video_file
 from config import TEMP_DIR
 
@@ -23,13 +23,26 @@ async def process_video_endpoint(file: UploadFile = File(...)):
         f.write(content)
     
     # 동영상 처리 실행 (객체 감지 및 이동 궤적 그리기)
-    process_video_file(input_filename, output_filename)
+    vertical_accuracy = process_video_file(input_filename, output_filename)
     
     # 필요에 따라 원시 입력 파일 삭제
     os.remove(input_filename)
     
-    # 처리된 동영상 파일 반환 (클라이언트에 전송)
-    return FileResponse(output_filename, media_type="video/mp4", filename="processed_video.mp4")
+    # 처리된 동영상 파일과 수직 정확도 반환
+    return {
+        "vertical_accuracy": round(vertical_accuracy, 2),
+        "video_url": f"/get_video/{os.path.basename(output_filename)}"
+    }
+
+@app.get("/get_video/{filename}")
+async def get_video(filename: str):
+    file_path = os.path.join(TEMP_DIR, filename)
+    if not os.path.exists(file_path):
+        return JSONResponse(
+            status_code=404,
+            content={"message": "File not found"}
+        )
+    return FileResponse(file_path, media_type="video/mp4", filename="processed_video.mp4")
 
 if __name__ == "__main__":
     import uvicorn
