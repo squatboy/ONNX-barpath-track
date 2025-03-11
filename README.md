@@ -18,10 +18,12 @@
 
 Prob:
 - 데이터셋 라벨링이 필요함
+  
 - 학습 데이터 수가 부족하여 과적합 발생 가능성 존재
 
 Solution:
 - `LabelImg`를 사용하여 직접 라벨링 수행
+  
 - 개선 가능성 : `Data augmentation` (좌우반전, 색상 변화 등) 적용하여 데이터 다양성 확보와 모델의 일반화 성능 향상이 가능
 
 <br>
@@ -46,6 +48,7 @@ max_frame_gap = int(fps * 1.5)  # 최대 허용 프레임 간격 (1.5초)
 
 Solution:
 - `batch size` 감소, `image size`를 640으로 제한하여 메모리 최적화
+  
 - `fp16` 옵션을 활성화하여 경량화 및 학습 속도 개선
 ```python
 python train.py --img 640 --batch 16 --epochs 100 --data custom.yaml --weights yolov5s.pt
