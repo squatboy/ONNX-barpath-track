@@ -6,9 +6,10 @@
 - Datasets : COCO 데이터셋 대신 바벨을 인식하기 위한 커스텀 데이터셋을 구성 (단일 클래스로 학습진행)
 - Performance Evaluation: `val.py`를 통해 `Precision`, `Recall`, `mAP` 등을 평가
 - Epochs: 20
-- 최종 mAP: 85%
+- 최종 mAP: 86%
 
 신뢰도 기반 필터링, 비최대 억제(NMS) 적용 -> 대표 검출 선택
+신뢰도 임계값 thresh = 0.3
 
 <br>
 <br>
