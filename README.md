@@ -8,8 +8,11 @@
 - **`Epochs`**: 20
 - 최종 **`mAP`**: 86%
 
-  <br>
+## API Endpoint Built
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 
+
+## Logic
 - 신뢰도 기반 필터링, 비최대 억제(NMS) 적용 -> 대표 검출 선택
 - 신뢰도 임계값 thresh = 0.3
 
