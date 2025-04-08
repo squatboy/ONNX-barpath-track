@@ -8,6 +8,10 @@
 - **`Epochs`**: 20
 - 최종 **`mAP`**: 86%
 
+  
+![labels](https://github.com/user-attachments/assets/deb0684b-f103-4fd5-9920-bff4b9c33628)
+![labels_correlogram](https://github.com/user-attachments/assets/a37e9b49-d5e2-4a15-9ef6-beaa87458b1b)
+
 ## API Endpoint Built
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 
@@ -24,7 +28,11 @@
 
 ---
 
-<br>
+
+## Train Batches
+![train_batch0](https://github.com/user-attachments/assets/1013e437-3f28-48a3-bdb3-e773770ddf05)
+
+---
 
 ## `Prob`
 - 데이터셋 라벨링이 필요함
