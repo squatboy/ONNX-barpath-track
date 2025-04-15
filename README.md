@@ -1,4 +1,5 @@
 # `ONNX`-barpathtrack-api
+### 영상 속 바벨의 움직임과 수직 괘도의 정확성을 화면 상에 시각화하여 제공
 
 # Info
 
