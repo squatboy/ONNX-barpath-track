@@ -1,15 +1,15 @@
 # `ONNX`-barpathtrack-api
-### 영상 속 바벨의 움직임과 수직 괘도의 정확성을 화면 상에 시각화하여 제공
+### Provides on-screen visualization of the barbell's movement and the accuracy of its vertical trajectory.
 
 # Info
 
-- **`Model`** : **`YOLOv5s`** to **`ONNX`**
-- **`Datasets`** : COCO 데이터셋 대신 바벨을 인식하기 위한 커스텀 데이터셋을 구성 (단일 클래스로 학습진행)
-- **`Performance Evaluation`**: `val.py`를 통해 **`Precision`**, **`Recall`**, **`mAP`** 등을 평가
+- **`Model`** : Trained **`YOLOv5s`** to **`ONNX`**
+- **`Datasets`** : Custom dataset built for barbell recognition instead of COCO (trained with a single class)
+- **`Performance Evaluation`**: Evaluated **`Precision`**, **`Recall`**, **`mAP`**, etc., using `val.py`
 - **`Epochs`**: 20
-- 최종 **`mAP`**: 86%
+- Final **`mAP`**: 86%
 
-  
+# Training 
 ![labels](https://github.com/user-attachments/assets/deb0684b-f103-4fd5-9920-bff4b9c33628)
 ![labels_correlogram](https://github.com/user-attachments/assets/a37e9b49-d5e2-4a15-9ef6-beaa87458b1b)
 
@@ -18,13 +18,13 @@
 
 
 ## Logic
-- 신뢰도 기반 필터링, 비최대 억제(NMS) 적용 -> 대표 검출 선택
-- 신뢰도 임계값 thresh = 0.3
+- Applied confidence-based filtering and Non-Maximum Suppression (NMS) -> selects representative detections
+- Confidence threshold `thresh = 0.3`
 
 <br>
 
 ## Examples
-<img width="181" alt="스크린샷 2025-02-13 오전 11 28 54" src="https://github.com/user-attachments/assets/960004aa-ef30-482b-bfd9-2239457c67fc" />
+<img width="181" alt="Screenshot 2025-02-13 at 11 28 54 AM (KST)" src="https://github.com/user-attachments/assets/960004aa-ef30-482b-bfd9-2239457c67fc" />
 <img width="302" alt="image" src="https://github.com/user-attachments/assets/06f8f567-aa53-4b9a-b686-9328df059b75" />
 
 
@@ -36,57 +36,74 @@
 
 ---
 
-## `Prob`
-- 데이터셋 라벨링이 필요함
-  
-- 학습 데이터 수가 부족하여 과적합 발생 가능성 존재
+# Usage
+## Requirements
 
-## `Solution`
-- `LabelImg`를 사용하여 직접 라벨링 수행
-  
-- 개선 가능성 : `Data augmentation` (좌우반전, 색상 변화 등) 적용하여 데이터 다양성 확보와 모델의 일반화 성능 향상이 가능
-
-<br>
-
-## `Prob`
-- 객체 미인식 구간 궤적 및 수직 정확도 영향
-(마지막으로 인식된 위치와 새로 인식된 위치를 직선으로 연결)
-
-## `Solution`
-- 객체 미인식 구간 및 오랜 객체 손실 후 재탐지 처리
-구간 재탐지 관련 셋업 변수
-```python
-last_detection_frame = -1  # 마지막으로 객체가 감지된 프레임 번호
-current_frame = 0  # 현재 프레임 번호
-max_frame_gap = int(fps * 1.5)  # 최대 허용 프레임 간격 (1.5초)
+```bash
+pip install -r requirements.txt
 ```
 
-<br>
+## Running the Server
 
-### `그 외`
-모델 학습 속도 저하와 GPU 메모리 부족 문제
-
-### `Solution`
-- **`batch size`** 감소, **`image size`**를 640으로 제한하여 메모리 최적화
-  
-- `fp16` 옵션을 활성화하여 경량화 및 학습 속도 개선
-```python
-python train.py --img 640 --batch 16 --epochs 100 --data custom.yaml --weights yolov5s.pt
+```bash
+uvicorn main:app --reload
 ```
 
-<br>
-<br>
+## API Endpoints
 
-모델 기본 형태 **`boxes`**, **`scores`**, **`labels`** -> 클라이언트에 적용 시 후처리하여 JSON 형태로 변환이 필요
-```python
-def postprocess(output):
-    boxes, scores, labels = output
-    results = []
-    for box, score, label in zip(boxes, scores, labels):
-        if score > 0.5:
-            results.append({"bbox": box.tolist(), "score": float(score), "label": int(label)})
-    return results
+### `/process_video/` (POST)
+
+Upload a video file for processing.
+
+**Request Body (multipart/form-data):**
+
+- `file`: Video file (.mp4).
+
+**Example `curl`:**
+
+```bash
+curl -X POST -F "file=@your_video.mp4" [http://127.0.0.1:8000/process_video/](http://127.0.0.1:8000/process_video/)
 ```
+
+**Response (JSON):**
+
+```json
+{
+  "vertical_accuracy": 95.23,
+  "video_url": "/get_video/output_unique_filename.mp4"
+}
+```
+
+### `/get_video/{filename}` (GET)
+
+Download the processed video.
+
+**Example URL:**
+
+`http://127.0.0.1:8000/get_video/output_unique_filename.mp4`
 
 ---
 
+## `Prob`
+- Dataset labeling is required.
+  
+- Potential for overfitting due to an insufficient number of training data.
+
+## `Solution`
+- Performed direct labeling using `LabelImg`.
+  
+- Potential improvements: Applying `Data augmentation` (horizontal flip, color variations, etc.) to secure data diversity and enhance the model's generalization performance.
+
+<br>
+
+## `Prob`
+- Impact on trajectory and vertical accuracy in object unrecognition intervals.
+(Connects the last recognized position and the newly recognized position with a straight line)
+
+## `Solution`
+- Handling of object unrecognition intervals and re-detection after prolonged object loss.
+Setup variables related to interval re-detection:
+```python
+last_detection_frame = -1  # Frame number when the object was last detected
+current_frame = 0  # Current frame number
+max_frame_gap = int(fps * 1.5)  # Maximum allowed frame gap (1.5 seconds)
